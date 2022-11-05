@@ -178,18 +178,19 @@ class WideTsFrameAdapter(PartitionedTsData):
         if column_id is None:
             raise ValueError("A value for column_id needs to be supplied")
 
-        _check_nan(df, column_id)
+        #_check_nan(df, column_id)
 
         if not value_columns:
             value_columns = _get_value_columns(df, column_id, column_sort)
 
-        _check_nan(df, *value_columns)
-        _check_colname(*value_columns)
+        #_check_nan(df, *value_columns)
+        # _check_colname(*value_columns)
 
         self.value_columns = value_columns
+        print(self.value_columns, type(self.value_columns), self.value_columns[0], type(self.value_columns[0]))
 
-        if column_sort is not None:
-            _check_nan(df, column_sort)
+        # if column_sort is not None:
+        #    _check_nan(df, column_sort)
 
         self.column_sort = column_sort
         self.df_grouped = df.groupby([column_id])
@@ -197,14 +198,14 @@ class WideTsFrameAdapter(PartitionedTsData):
         super().__init__(df, column_id)
 
     def __len__(self):
-        return self.df_grouped.ngroups * len(self.value_columns)
+        return self.df_grouped.ngroups * len(self.value_columns[0])
 
     def __iter__(self):
         for group_name, group in self.df_grouped:
             if self.column_sort is not None:
                 group = group.sort_values(self.column_sort)
 
-            for kind in self.value_columns:
+            for kind in self.value_columns[0]:
                 yield Timeseries(group_name, kind, group[kind])
 
 
@@ -249,7 +250,7 @@ class LongTsFrameAdapter(PartitionedTsData):
         else:
             self.column_value = column_value
 
-        _check_nan(df, column_id, column_kind, self.column_value)
+        #_check_nan(df, column_id, column_kind, self.column_value)
 
         if column_sort is not None:
             _check_nan(df, column_sort)
