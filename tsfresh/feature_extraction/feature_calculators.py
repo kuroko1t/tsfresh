@@ -33,7 +33,6 @@ from scipy.signal import cwt, find_peaks_cwt, ricker, welch
 from scipy.stats import linregress
 from statsmodels.tools.sm_exceptions import MissingDataError
 from statsmodels.tsa.ar_model import AutoReg
-
 from tsfresh.utilities.string_manipulation import convert_to_output_format
 
 with warnings.catch_warnings():
@@ -181,7 +180,7 @@ def _aggregate_on_chunks(x, f_agg, chunk_len):
     :return type: list
     """
     return [
-        getattr(x[i * chunk_len : (i + 1) * chunk_len], f_agg)()
+        getattr(x[i * chunk_len: (i + 1) * chunk_len], f_agg)()
         for i in range(int(np.ceil(len(x) / chunk_len)))
     ]
 
@@ -557,6 +556,7 @@ def abs_energy(x):
 
 
 @set_property("fctype", "simple")
+@set_property("minimal", True)
 def cid_ce(x, normalize):
     """
     This function calculator is an estimate for a time series complexity [1] (A more complex time series has more peaks,
@@ -614,6 +614,7 @@ def mean_abs_change(x):
 
 
 @set_property("fctype", "simple")
+@set_property("minimal", True)
 def mean_change(x):
     """
     Average over time series differences.
@@ -634,6 +635,7 @@ def mean_change(x):
 
 
 @set_property("fctype", "simple")
+@set_property("minimal", True)
 def mean_second_derivative_central(x):
     """
     Returns the mean value of a central approximation of the second derivative
@@ -1573,7 +1575,7 @@ def time_reversal_asymmetry_statistic(x, lag):
         one_lag = _roll(x, -lag)
         two_lag = _roll(x, 2 * -lag)
         return np.mean(
-            (two_lag * two_lag * one_lag - one_lag * x * x)[0 : (n - 2 * lag)]
+            (two_lag * two_lag * one_lag - one_lag * x * x)[0: (n - 2 * lag)]
         )
 
 
@@ -1616,7 +1618,7 @@ def c3(x, lag):
     if 2 * lag >= n:
         return 0
     else:
-        return np.mean((_roll(x, 2 * -lag) * _roll(x, -lag) * x)[0 : (n - 2 * lag)])
+        return np.mean((_roll(x, 2 * -lag) * _roll(x, -lag) * x)[0: (n - 2 * lag)])
 
 
 @set_property("fctype", "simple")
@@ -1775,7 +1777,7 @@ def approximate_entropy(x, m, r):
         return 0
 
     def _phi(m):
-        x_re = np.array([x[i : i + m] for i in range(N - m + 1)])
+        x_re = np.array([x[i: i + m] for i in range(N - m + 1)])
         C = np.sum(
             np.max(np.abs(x_re[:, np.newaxis] - x_re[np.newaxis, :]), axis=2) <= r,
             axis=0,
@@ -1830,7 +1832,7 @@ def lempel_ziv_complexity(x, bins):
     inc = 1
     while ind + inc <= n:
         # convert to tuple in order to make it hashable
-        sub_str = tuple(sequence[ind : ind + inc])
+        sub_str = tuple(sequence[ind: ind + inc])
         if sub_str in sub_strings:
             inc += 1
         else:

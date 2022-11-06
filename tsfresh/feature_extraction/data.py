@@ -187,7 +187,7 @@ class WideTsFrameAdapter(PartitionedTsData):
         # _check_colname(*value_columns)
 
         self.value_columns = value_columns
-        print(self.value_columns, type(self.value_columns), self.value_columns[0], type(self.value_columns[0]))
+        #print(self.value_columns, type(self.value_columns), self.value_columns[0], type(self.value_columns[0]))
 
         # if column_sort is not None:
         #    _check_nan(df, column_sort)
